@@ -33,11 +33,11 @@ There are other tools out there. We even use some of them.
 
 `yaml-patch`: We use yaml-patch to easily modify our YAML manifests. However, it doesn't provide functionality to simply read existing YAML files using the power of its pathfinder engine and RFC6902 paths.
 
-`extract-from-yaml` (better name pending) uses the Pathfinder engine from `yaml-patch` to extract values from any location in a YAML file - even in arrays. When working with arrays, you can use a query interface to select a specific instance of structured data instead of relying on a hardcoded array index like other tools.
+`extract-from-yaml` (better name pending) uses the Pathfinder engine from `yaml-patch` to extract values from any location in a YAML file - even in arrays. When working with arrays, you can use a query interface to select a specific instance of structured data instead of relying on a hard-coded array index like other tools.
 
 ## Is it any good?
 
-No. It works when it works. If there is an error (like if something doens't exist), it's not good right now. I'm working on it.
+No. It works when it works. If there is an error (like if something doesn't exist), it's not good right now. I'm working on it.
 
 # License
 
