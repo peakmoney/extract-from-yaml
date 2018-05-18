@@ -1,0 +1,10 @@
+# .goreleaser.yml
+# Build customization
+builds:
+  - binary: extract-from-yaml
+    goos:
+      - windows
+      - darwin
+      - linux
+    goarch:
+      - amd64

@@ -4,6 +4,9 @@
 *.dll
 *.so
 *.dylib
+extract-from-yaml-linux
+extract-from-yaml.exe
+extract-from-yaml-darwin
 
 # Test binary, build with `go test -c`
 *.test

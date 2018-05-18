@@ -44,46 +44,74 @@ func findContainer(c yamlpatch.Container, path *yamlpatch.OpPath) (yamlpatch.Con
 	return foundContainer, decodePatchKey(key), nil
 }
 
+func handleError(silent bool, message string) {
+	if silent == true {
+		fmt.Print("")
+		os.Exit(0)
+	}
+	log.Fatalf("Fatal error: %s", message)
+}
+
 func main() {
-	pathPtr := flag.String("path", "", "RFC6902-ish path to search for")
+	silentPtr := flag.Bool("silent", false, "Silence any error and return empty strings instead")
+	pathPtr := flag.String("path", "", "RFC6902-ish search path")
 	flag.Parse()
 
 	doc, err := ioutil.ReadAll(os.Stdin)
+
 	if err != nil {
-		log.Fatalf("error reading from stdin: %s", err)
-		return
+		handleError(*silentPtr, fmt.Sprintf("Unable to read stdin\n%s", err))
 	}
 
 	if len(doc) == 0 {
-		log.Fatalf("error: no data provided to stdin")
-		return
+		handleError(*silentPtr, "no data was provided to stdin")
+	}
+
+	if pathPtr == nil {
+		handleError(*silentPtr, "no search path specifed")
+	}
+
+	if len(*pathPtr) == 0 {
+		handleError(*silentPtr, "cannot search for an empty search path")
 	}
 
 	var iface interface{}
 
 	err = yaml.Unmarshal(doc, &iface)
 	if err != nil {
-		log.Fatalln("can't unmarshall")
-		return
+		handleError(*silentPtr, fmt.Sprintf("Unable to parse yaml\n%s", err))
 	}
 
 	var c yamlpatch.Container
 	c = yamlpatch.NewNode(&iface).Container()
-
 	pathfinder := yamlpatch.NewPathFinder(c)
 	paths := pathfinder.Find(*pathPtr)
+
+	if len(paths) == 0 {
+		handleError(*silentPtr, "Search path returned empty results")
+	}
 
 	newPath := paths[0]
 
 	var opPath yamlpatch.OpPath
 	opPath = yamlpatch.OpPath(newPath)
-	con, key, nerr := findContainer(c, &opPath)
-	if nerr != nil {
-		log.Fatalln("Whoops... no thing...")
+	con, key, fErr := findContainer(c, &opPath)
+	if fErr != nil {
+		handleError(*silentPtr, fmt.Sprintf("Unable to locate node with search path\n%s", fErr))
 	}
 
-	val, err := con.Get(key)
+	val, gErr := con.Get(key)
+
+	if gErr != nil {
+		handleError(*silentPtr, fmt.Sprintf("Unable to fetch value from key\n%s", err))
+	}
+
+	if val == nil {
+		fmt.Print("")
+		os.Exit(0)
+	}
+
 	result := val.Value()
 
-	fmt.Printf("%s\n", result)
+	fmt.Print(result)
 }
