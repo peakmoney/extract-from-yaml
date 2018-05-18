@@ -10,18 +10,18 @@ Given
 # my_file.yaml
 my_array:
 - name: Fred
-  age: 25
+  favorite_food: bananas
 - name: Sally
-  age: 27
+  favorite_food: pizza
 ```
 
 Command
 
-`cat my_file.yaml | extract-from-yaml -path /my_array/name=Fred/age`
+`cat my_file.yaml | extract-from-yaml -path /my_array/name=Fred/favorite_food`
 
 Result
 
-`25`
+`bananas`
 
 `extract-from-yaml` uses Stdin to receive your YAML file. If you do not pipe it in on the command line, the program will wait for an EOF condition before proceeding. This can be triggered by Ctrl-D on most systems. Feel free to just type or paste YAML directly into your console to play around.
 

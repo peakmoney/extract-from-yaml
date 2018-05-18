@@ -16,6 +16,11 @@ var (
 	rfc6901Decoder = strings.NewReplacer("~1", "/", "~0", "~")
 )
 
+// This section is extracted from the `yaml-patch` Container module
+// because they are private, but extremely useful for what we're doing here.
+// Used under license: https://github.com/krishicks/yaml-patch/blob/master/LICENSE
+// Changes: Modified the arguments list to reference types within the yamlpatch
+//          package instead of assuming we're still in it.
 func decodePatchKey(k string) string {
 	return rfc6901Decoder.Replace(k)
 }
@@ -43,6 +48,8 @@ func findContainer(c yamlpatch.Container, path *yamlpatch.OpPath) (yamlpatch.Con
 
 	return foundContainer, decodePatchKey(key), nil
 }
+
+// End
 
 func handleError(silent bool, message string) {
 	if silent == true {
